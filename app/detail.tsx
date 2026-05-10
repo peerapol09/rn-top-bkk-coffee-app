@@ -2,11 +2,11 @@ import * as Linking from "expo-linking";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
@@ -21,22 +21,25 @@ export default function Detail() {
   };
 
   //   ฟังก์ชันเปิดแผนที่
-  <MapView
-    style={{ height: 300, marginVertical: 20, marginHorizontal: 20 }}
-    initialRegion={{
-      longitude: parseFloat(longitude as string),
-      latitude: parseFloat(latitude as string),
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    }}
-  >
-    <Marker
-      coordinate={{
-        latitude: parseFloat(latitude as string),
-        longitude: parseFloat(longitude as string),
-      }}
-    />
-  </MapView>;
+  const handleOpenMap = () => {
+    // สร้าง URL สำหรับ Google Maps และ Apple Maps
+    const googleMapsUrl = `https://maps.google.com/?q=${latitude},${longitude}`;
+    const appleMapsUrl = `maps://maps.apple.com/?q=${params.name}&ll=${latitude},${longitude}`;
+
+    // Try to open Google Maps, fallback to Apple Maps
+    Linking.canOpenURL(googleMapsUrl)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(googleMapsUrl);
+        } else {
+          Linking.openURL(appleMapsUrl);
+        }
+      })
+      .catch(() => {
+        // Fallback to web Google Maps
+        Linking.openURL(`https://maps.google.com/?q=${latitude},${longitude}`);
+      });
+  };
 
   return (
     <ScrollView>
